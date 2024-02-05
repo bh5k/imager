@@ -12,7 +12,7 @@ services:
       - "3306:3306"
 
   imager-app: #spring boot
-    image: openjdk:latest #jdk
+    image: maven:3.8.5-openjdk-17
     working_dir: /app
     volumes:
       - ./backend:/app 
@@ -25,7 +25,7 @@ services:
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/imagerdb
       SPRING_DATASOURCE_USERNAME: springuser
       SPRING_DATASOURCE_PASSWORD: springuser
-    command: ./mvnw spring-boot:run  
+    command: mvn spring-boot:run  
 
   imager-ui: #react app
     build:
