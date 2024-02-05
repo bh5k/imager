@@ -1,0 +1,43 @@
+version: '3'
+
+services:
+  mysql:
+    image: mysql:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: some_pass
+      MYSQL_DATABASE: imagerdb
+      MYSQL_USER: springuser
+      MYSQL_PASSWORD: springuser
+    ports:
+      - "3306:3306"
+
+  imager-app: #spring boot
+    image: openjdk:latest #jdk
+    working_dir: /app
+    volumes:
+      - ./backend:/app 
+      - /app/target
+    depends_on:
+        - mysql
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/imagerdb
+      SPRING_DATASOURCE_USERNAME: springuser
+      SPRING_DATASOURCE_PASSWORD: springuser
+    command: ./mvnw spring-boot:run  
+
+  imager-ui: #react app
+    build:
+      context: ./frontend #frontend is our project name
+    restart: unless-stopped
+    volumes:
+      - ./frontend:/app #app is the working director in the contain, frontend is our project name
+      - "/app/node_modules"  
+    ports:
+      - "3000:3000"
+      
+
+  
+
+  
